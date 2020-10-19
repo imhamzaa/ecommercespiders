@@ -4,23 +4,22 @@ from scrapy.spiders import CrawlSpider, Rule
 
 
 class SurfStitch(CrawlSpider):
-
     name = 'surfstitch'
-
     start_urls = [
         'https://www.surfstitch.com/mens/clothing',
         'https://www.surfstitch.com/womens/clothing',
-        'https://www.surfstitch.com/kids/boys',
-        'https://www.surfstitch.com/kids/girls',
-        'https://www.surfstitch.com/kids/baby',
+        'https://www.surfstitch.com/kids/boys/clothing',
+        'https://www.surfstitch.com/kids/girls/clothing',
+        'https://www.surfstitch.com/kids/baby/clothing',
     ]
-    product_css = ['.product-tile a']
     navigation_css = [
         '#paging-bar-header .page-next',
-        '.infinite-scroll-placeholder[data-loading-state="unloaded"]',
+    ]
+    product_css = [
+        '.product-tile a',
     ]
     rules = (
-        Rule(LinkExtractor(restrict_css=navigation_css, tags=('a', 'div'), attrs=('href', 'data-grid-url')),),
+        Rule(LinkExtractor(restrict_css=navigation_css)),
         Rule(LinkExtractor(restrict_css=product_css), callback='parse_product'),
     )
 
@@ -54,7 +53,8 @@ class SurfStitch(CrawlSpider):
     def size_request(self, response, unselected_size_urls):
         requests = []
         for url in unselected_size_urls:
-            requests.append(Request(url=response.urljoin(url), callback=self.parse_size, meta={'garment': response.meta['garment']}))
+            requests.append(Request(url=response.urljoin(url), callback=self.parse_size,
+                                    meta={'garment': response.meta['garment']}))
         return requests
 
     def parse_size(self, response):
