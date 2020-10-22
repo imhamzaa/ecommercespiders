@@ -13,5 +13,5 @@ where:
 
 1. **SPIDER_NAME:** is the name of spider mentioned in spider code.
 
-2. **-o output.json:** (**-o** means output) and **output.json** is the output file. It can also be .csv file.
+2. **-o output.json:** file containing all scraped items, serialized in JSON.
  
